@@ -84,10 +84,16 @@ namespace EmployeeManagementBDD.Features
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Add Valid Employee Record")]
-        public async System.Threading.Tasks.Task AddValidEmployeeRecord()
+        [NUnit.Framework.TestCaseAttribute("Admin", "admin123", "saul", "G", "goodman", null)]
+        public async System.Threading.Tasks.Task AddValidEmployeeRecord(string username, string password, string fname, string middle_Name, string lname, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("username", username);
+            argumentsOfScenario.Add("password", password);
+            argumentsOfScenario.Add("fname", fname);
+            argumentsOfScenario.Add("middle_name", middle_Name);
+            argumentsOfScenario.Add("lname", lname);
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Add Valid Employee Record", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 7
 this.ScenarioInitialize(scenarioInfo);
@@ -122,9 +128,9 @@ this.ScenarioInitialize(scenarioInfo);
                             "middlename",
                             "lastname"});
                 table1.AddRow(new string[] {
-                            "john",
-                            "w",
-                            "wick"});
+                            string.Format("{0}", fname),
+                            string.Format("{0}", middle_Name),
+                            string.Format("{0}", lname)});
 #line 14
  await testRunner.AndAsync("I fill the employee form", ((string)(null)), table1, "And ");
 #line hidden
@@ -132,7 +138,7 @@ this.ScenarioInitialize(scenarioInfo);
  await testRunner.AndAsync("I click on save employee", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 18
- await testRunner.ThenAsync("i should get the profile name as \"jack wick\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync(string.Format("i should get the profile name as \"{0} {1}\"", fname, lname), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 19
  await testRunner.AndAsync("I should get all field with filld data", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
