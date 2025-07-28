@@ -1,11 +1,12 @@
-﻿Feature: Employee
+﻿@employee
+Feature: Employee
 
 //In order to manage employee records 
 /As an Admin
 //I want to add, edit, delete employee details
-
+@regression
 Scenario Outline: Add Valid Employee Record
-    Given I have browser with OrangeHRM application
+    Given I have opened OrangeHRM application
 	When I enter username as "Admin"
 	And  I enter password as "admin123"
 	And  I click on login

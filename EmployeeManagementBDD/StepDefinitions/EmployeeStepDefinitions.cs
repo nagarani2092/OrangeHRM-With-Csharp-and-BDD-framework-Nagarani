@@ -1,5 +1,6 @@
 using EmployeeManagementBDD.Hooks;
 using EmployeeManagementBDD.Pages;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using Reqnroll;
 using System;
@@ -12,13 +13,19 @@ namespace EmployeeManagementBDD.StepDefinitions
         private readonly MainPage _mainPage;
         private readonly PIMPage _pIMPage;
         private readonly AddEmployeePage _addEmployeePage;
-        public EmployeeStepDefinitions(MainPage mainPage,PIMPage pIMPage,AddEmployeePage addEmployeePage)
+        private readonly PersonalDetailsPage _personalDetailsPage;
+        private static DataTable _dataTable;
+        private readonly ScenarioContext _scenarioContext;  
+        public EmployeeStepDefinitions(MainPage mainPage,PIMPage pIMPage,AddEmployeePage addEmployeePage,PersonalDetailsPage personalDetailsPage,ScenarioContext scenariocontext)
         {
           _mainPage = mainPage;
            _pIMPage = pIMPage;
-            _addEmployeePage = addEmployeePage;
-          
+           _addEmployeePage = addEmployeePage;
+           _personalDetailsPage = personalDetailsPage;
+            _scenarioContext = scenariocontext;
+            
         }
+
 
         [When("I click on PIM menu")]
         public void WhenIClickOnPIMMenu()
@@ -36,17 +43,28 @@ namespace EmployeeManagementBDD.StepDefinitions
         [When("I fill the employee form")]
         public void WhenIFillTheEmployeeForm(DataTable dataTable)
         {
-            Console.WriteLine(dataTable.RowCount);
+           EmployeeModel empModel= dataTable.CreateInstance<EmployeeModel>();
+            //var emps=dataTable.CreateSet<EmployeeModel>();
+           // dynamic dynEmp = dataTable.CreateInstance<object>();
+            //Console.WriteLine(dynEmp.FirstName);
 
-            Console.WriteLine(dataTable.Rows[0][0]);
-            Console.WriteLine(dataTable.Rows[0][1]);
-            Console.WriteLine(dataTable.Rows[0][2]);
 
-            Console.WriteLine(dataTable.Rows[0]["firstName"]);
-            Console.WriteLine(dataTable.Rows[0]["middleName"]);
-            Console.WriteLine(dataTable.Rows[0]["lastName"]);
-            _addEmployeePage.FillEmployeeDetails(dataTable.Rows[0]["firstName"],
-             dataTable.Rows[0]["middleName"], dataTable.Rows[0]["lastName"]);
+            _scenarioContext.Add("employeeDt", dataTable);
+            //_scenarioContext.Add("session","c# selenium");
+            //Console.WriteLine(dataTable);
+            //Console.WriteLine(dataTable.RowCount);
+
+            //Console.WriteLine(dataTable.Rows[0][0]);
+            //Console.WriteLine(dataTable.Rows[0][1]);
+            //Console.WriteLine(dataTable.Rows[0][2]);
+
+            //Console.WriteLine(dataTable.Rows[0]["firstname"]);
+            //Console.WriteLine(dataTable.Rows[0]["middlename"]);
+            //Console.WriteLine(dataTable.Rows[0]["lastname"]);
+            ////_addEmployeePage.FillEmployeeDetails(dataTable.Rows[0]["firstname"],
+             //dataTable.Rows[0]["middlename"], dataTable.Rows[0]["lastname"]);
+
+            _addEmployeePage.FillEmployeeDetails(empModel.FirstName,empModel.MiddleName, empModel.LastName);
         }
 
         [When("I click on save employee")]
@@ -56,15 +74,27 @@ namespace EmployeeManagementBDD.StepDefinitions
         }
 
         [Then("i should get the profile name as {string}")]
-        public void ThenIShouldGetTheProfileNameAs(string expectedProfile)
+        public void ThenIShouldGetTheProfileNameAs(string expectedProfileName)
         {
+            string actualProfileName = _personalDetailsPage.GetProfileName(expectedProfileName);
+            Assert.That(actualProfileName,Is.EqualTo(expectedProfileName));
             
         }
 
         [Then("I should get all field with filld data")]
         public void ThenIShouldGetAllFieldWithFilldData()
         {
-            
+            if(_scenarioContext.TryGetValue("employeeDt",out DataTable dt))
+            {
+                Console.WriteLine(dt.Rows[0]["firstname"]);
+                Console.WriteLine(dt.Rows[0]["middlename"]);
+                Console.WriteLine(dt.Rows[0]["lastname"]);
+            }
+            if(_scenarioContext.TryGetValue("session", out string output))
+            {
+                Console.WriteLine(output);
+            }
+           
         }
     }
 }

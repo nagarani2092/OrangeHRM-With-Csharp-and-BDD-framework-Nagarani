@@ -13,13 +13,16 @@ namespace EmployeeManagementBDD.StepDefinitions
     {
         private readonly LoginPage _loginPage;
         private readonly DashboardPage _dashboardPage;
-       public LoginStepDefinitions(LoginPage loginPage,DashboardPage dashboardPage)
+        private readonly ScenarioContext _scenarioContext;
+        public LoginStepDefinitions(LoginPage loginPage,DashboardPage dashboardPage, ScenarioContext scenariocontext)
         {
             this._loginPage = loginPage;
             this._dashboardPage = dashboardPage;
-        }
+            _scenarioContext = scenariocontext;
 
+        }
         [Given("I have browser with OrangeHRM application")]
+        [Given("I have opened OrangeHRM application")]
         public void GivenIHaveBrowserWithOrangeHRMApplication()
         {
             _loginPage.NavigateToURL();
@@ -28,6 +31,7 @@ namespace EmployeeManagementBDD.StepDefinitions
         [When("I enter username as {string}")]
         public void WhenIEnterUsernameAs(string username)
         {
+            _scenarioContext.Add("username",username);
             _loginPage.EnterUsername(username);
         }
 

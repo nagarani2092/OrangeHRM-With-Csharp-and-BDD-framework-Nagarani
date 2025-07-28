@@ -15,6 +15,7 @@ namespace EmployeeManagementBDD.Pages
         private By firstNameLocator = By.Name("firstName");
         private By middleNameLocator = By.Name("middleName");
         private By lastNameLocator = By.Name("lastName");
+        private By saveLocator = By.XPath("//button[normalize-space()='Save']");
         private IWebDriver _driver;
 
         public AddEmployeePage(AutomationHooks hooks) : base(hooks.driver)
@@ -29,7 +30,7 @@ namespace EmployeeManagementBDD.Pages
         }
         public void ClickOnSave()
         {
-
+            ClickOnElement(saveLocator);
         }
     }
 }
