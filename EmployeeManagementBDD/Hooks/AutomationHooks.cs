@@ -62,6 +62,7 @@ namespace EmployeeManagementBDD.Hooks
         [AfterScenario]
         public void TeardownScenario()
         {
+            WebDriverKeywords.TakeScreenshot(driver);
             if (driver != null)
             {
                 driver.Dispose();

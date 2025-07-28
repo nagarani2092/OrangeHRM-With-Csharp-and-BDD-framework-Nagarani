@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.BiDi.BrowsingContext;
 using OpenQA.Selenium.Support.UI;
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace EmployeeManagementBDD.Hooks
     {
         private IWebDriver _driver;
         private DefaultWait<IWebDriver> _wait;
+
+       // public static object ScreenshotImageFormat { get; private set; }
 
         public WebDriverKeywords(IWebDriver driver)
         {
@@ -70,5 +73,20 @@ namespace EmployeeManagementBDD.Hooks
         {
             _wait.Until(x => x.FindElement(locator)).Click();
         }
+
+        public static void TakeScreenshot(IWebDriver driver)
+        {
+            Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Screenshots");
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            string fileName = Path.Combine(path, "screenshot_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png");
+            ss.SaveAsFile(fileName);
+
+
+
+        }
+
+        }
     }
-}
